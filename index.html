@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="messages"></div>
+        <button id="clearLocalStorage">click me to clear the localStorage</button>
+        <div id="results"></div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                
+                //library configuration
+                clientCached.cancelServerCall = function(){
+                    
+                };
+                clientCached.init('results');
+                
+                $.ajax({
+                    url:'getData.php',
+                    async:true,
+                    type:'POST',
+                    dataType:'json',
+                    error: function(response) {
+                        alert('error');
+                    },
+                    success: function(response) {
+                        $.each(response, function() {
+                           //TODO qui results deve essere configurabile dal client
+                           $('#results').append('<div>user: '+this.id+' '+this.name+' '+this.surname+'</div><br />');
+                        });
+                        $('#results').trigger('customAction');
+                    }
+                });
+            });
+            if (typeof jQuery == 'undefined') {
+                document.write(unescape("%3Cscript src='lib/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+            }
+        </script>
+        <script src="cache-results.js"></script>
+        <script src="lib/Iuppiter.js"></script>
+    </body>
+</html>
