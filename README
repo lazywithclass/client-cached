@@ -1,0 +1,4 @@
+This is a proof of concept for now.
+
+A form is submitted a first time, the results are cached in the localStorage.
+Other submissions of the form will not send a request to the server, results will be retrieved from the localStorage.
