@@ -1,3 +1,11 @@
+/*
+ * client-cached.js: An object to cache form results on the client side.
+ *
+ * (C) 2010 Alberto Zaccagni
+ * MIT LICENSE
+ *
+ */
+
 //link per compressione clientside del javascript
 //http://code.google.com/p/jslzjb/
 
