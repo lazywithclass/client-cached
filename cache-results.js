@@ -12,51 +12,62 @@
 //TODO i seguenti campi devono essere configurati quando 
 //si crea l'oggetto cache-results
 
-var localStorageId = 'localhost-montecristoz';
+
+//TODO questi sono da cambiare, il localStorage è per site,
+//quindi non c'è problema di incasinamento di nomi di variabili
+var localStorageId = '1aaa<azazaa<aaabaa';
+var localStorageStartFunction = '2aa<aaazaabazaa<a';
+var localStorageCancelFunction = '3aaaza<aaaza<aaa';
 
 $('#clearLocalStorage').click(function(){
     clientCached.initLocalStorage();
 });
 
 var clientCached = {
+	
+	resultsDivId : '',
 
-    //it has to be implemented from the user
-    cancelServerCall : undefined,
-    
+    //are to be implemented from the user
+	//are saved in the localStorage to persist between page refresh
+    setCancelServerCall : function(cancelServerCallFunction){
+		localStorage[localStorageCancelFunction] = cancelServerCallFunction;
+	},
+    setServerCall : function(serverCallFunction){
+	   	localStorage[localStorageStartFunction] = serverCallFunction;
+	},
+	
+	cancelServerCallIsSet : function(){
+        return !!(localStorage[localStorageCancelFunction]!==null &&
+                localStorage[localStorageCancelFunction].length>0);
+    },
+	
+    startServerCallIsSet : function(){
+		return !!(localStorage[localStorageCancelFunction]!==null &&
+                localStorage[localStorageCancelFunction].length>0);
+    },
+	
     isProperlyInitiated : function() {
-        return typeof clientCached.cancelServerCall === 'function';
+        return !!(typeof clientCached.cancelServerCall === 'function' ||
+              typeof clientCached.setServerCall === 'function');
     },
 
-    hasLocalStorage : {
-        return 'localStorage' in window && window.localStorage !== null {
+    hasLocalStorage : function(){
+        return !!('localStorage' in window && window.localStorage !== null);
     },
 
     init : function(resultsDivId){
-        if(!clientCached.isProperlyInitiated() && !hasLocalStorage){
-	    return;
-	}
-		
-        $('#'+resultsDivId).bind('customAction', function(event, data) {
+        if (!clientCached.hasLocalStorage() || !clientCached.isProperlyInitiated()) {
+            return;
+        }
+		$('#'+resultsDivId).bind('customAction', function(event, data) {
             if(!localStorage[localStorageId]){
                 clientCached.initLocalStorage();
             }
-            
-            if(!clientCached.isLocalStorageEmpty()){
-                $('#messages').append("not empty localStorage");
-                //come sono i dati nello storage? non ricordo, cazzo
-                var compressedData = JSON.parse(localStorage[localStorageId]);
-                var decompressedData = Iuppiter.decompress(compressedData);
-                $('#'+resultsDivId).html(decompressedData);
-            }else{
-                $('#messages').append("empty localStorage");
-                var uncompressedData = $('#'+resultsDivId).html();
-                var compressedData = Iuppiter.compress(uncompressedData);
-                localStorage[localStorageId] = JSON.stringify(compressedData);
-                
-                //TODO disabilita meccanismo di interrogazione server
-                outerThis.cancelServerCall();
-            }
+            var uncompressedData = $('#'+resultsDivId).html();
+            var compressedData = Iuppiter.compress(uncompressedData);
+            localStorage[localStorageId] = JSON.stringify(compressedData);
         });
+		clientCached.resultsDivId = resultsDivId;
     },
     
     initLocalStorage : function(){
@@ -65,5 +76,11 @@ var clientCached = {
     
     isLocalStorageEmpty : function(){
         return !!(JSON.parse(localStorage[localStorageId]).length==0);
-    }
+    },
+	
+	populateResults : function(){
+		$('#messages').html("taking data from the localStorage");
+		var compressedData = JSON.parse(localStorage[localStorageId]);
+		$('#'+clientCached.resultsDivId).html(Iuppiter.decompress(compressedData));
+	}
 };
