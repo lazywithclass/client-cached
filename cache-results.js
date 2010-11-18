@@ -19,10 +19,14 @@ var clientCached = {
         return typeof clientCached.cancelServerCall === 'function';
     },
 
+    hasLocalStorage : {
+        return 'localStorage' in window && window.localStorage !== null {
+    },
+
     init : function(resultsDivId){
-		if(!clientCached.isProperlyInitiated()){
-			return;
-		}
+        if(!clientCached.isProperlyInitiated() && !hasLocalStorage){
+	    return;
+	}
 		
         $('#'+resultsDivId).bind('customAction', function(event, data) {
             if(!localStorage[localStorageId]){
