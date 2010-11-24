@@ -21,20 +21,18 @@
 	                    success: function(response) {
 	                        $.each(response, function() {
 	                           //TODO qui results deve essere configurabile dal client
-	                           $('#results').append('<div>user: '+this.id+' '+this.name+' '+this.surname+'</div><br />');
+	                           $('#results').append('<div>user: '+this.id+' '+this.email+' '+this.city+'</div><br />');
 	                        });
 	                        $('#results').trigger('customAction');
 	                    }
 	                });
 				}
-				if(! clientCached.cancelServerCallIsSet()){
+				if(! clientCached.canUseCachedData()){
 					$('#messages').html("taking data from the server");
 					ajaxCall();
-					clientCached.setCancelServerCall(ajaxCall);
 				}else{
 					clientCached.populateResults();
 				}
-				
             });
             if (typeof jQuery == 'undefined') {
                 document.write(unescape("%3Cscript src='lib/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));

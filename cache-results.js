@@ -15,37 +15,41 @@
 
 //TODO questi sono da cambiare, il localStorage è per site,
 //quindi non c'è problema di incasinamento di nomi di variabili
-var localStorageId = '1aaa<azazaa<aaabaa';
-var localStorageStartFunction = '2aa<aaazaabazaa<a';
-var localStorageCancelFunction = '3aaaza<aaaza<aaa';
+var canUseId = 'wer324tfgerfew4sf1aas2earf';
+var localStorageId = '1aaa<azazaassq<aa2aasxwa1a<aabaa';
+var localStorageStartFunction = '2aa<aqaaasxz2s1saaza<aaawbazaa<a';
+var localStorageCancelFunction = '3aaasa2zaasaa<xas1<aaazaw<aaa';
 
 $('#clearLocalStorage').click(function(){
     clientCached.initLocalStorage();
 });
 
 var clientCached = {
-	
-	resultsDivId : '',
+    
+    resultsDivId : '',
 
-    //are to be implemented from the user
-	//are saved in the localStorage to persist between page refresh
+    canUseCachedData : function(){
+        return !clientCached.isLocalStorageEmpty();    
+    },
+
+    //these are to be implemented from the user
     setCancelServerCall : function(cancelServerCallFunction){
-		localStorage[localStorageCancelFunction] = cancelServerCallFunction;
-	},
+        localStorage[localStorageCancelFunction] = cancelServerCallFunction;
+    },
     setServerCall : function(serverCallFunction){
-	   	localStorage[localStorageStartFunction] = serverCallFunction;
-	},
-	
-	cancelServerCallIsSet : function(){
+        localStorage[localStorageStartFunction] = serverCallFunction;
+    },
+    
+    cancelServerCallIsSet : function(){
         return !!(localStorage[localStorageCancelFunction]!==null &&
                 localStorage[localStorageCancelFunction].length>0);
     },
-	
+    
     startServerCallIsSet : function(){
-		return !!(localStorage[localStorageCancelFunction]!==null &&
+        return !!(localStorage[localStorageCancelFunction]!==null &&
                 localStorage[localStorageCancelFunction].length>0);
     },
-	
+    
     isProperlyInitiated : function() {
         return !!(typeof clientCached.cancelServerCall === 'function' ||
               typeof clientCached.setServerCall === 'function');
@@ -56,10 +60,10 @@ var clientCached = {
     },
 
     init : function(resultsDivId){
-        if (!clientCached.hasLocalStorage() || !clientCached.isProperlyInitiated()) {
+        if (!clientCached.hasLocalStorage()) {
             return;
         }
-		$('#'+resultsDivId).bind('customAction', function(event, data) {
+        $('#'+resultsDivId).bind('customAction', function(event, data) {
             if(!localStorage[localStorageId]){
                 clientCached.initLocalStorage();
             }
@@ -67,7 +71,7 @@ var clientCached = {
             var compressedData = Iuppiter.compress(uncompressedData);
             localStorage[localStorageId] = JSON.stringify(compressedData);
         });
-		clientCached.resultsDivId = resultsDivId;
+        clientCached.resultsDivId = resultsDivId;
     },
     
     initLocalStorage : function(){
@@ -75,12 +79,12 @@ var clientCached = {
     },
     
     isLocalStorageEmpty : function(){
-        return !!(JSON.parse(localStorage[localStorageId]).length==0);
+        return localStorage[localStorageId]==null || !!(JSON.parse(localStorage[localStorageId]).length==0);
     },
-	
-	populateResults : function(){
-		$('#messages').html("taking data from the localStorage");
-		var compressedData = JSON.parse(localStorage[localStorageId]);
-		$('#'+clientCached.resultsDivId).html(Iuppiter.decompress(compressedData));
-	}
+    
+    populateResults : function(){
+        $('#messages').html("taking data from the localStorage");
+        var compressedData = JSON.parse(localStorage[localStorageId]);
+        $('#'+clientCached.resultsDivId).html(Iuppiter.decompress(compressedData));
+    }
 };
