@@ -6,19 +6,7 @@
  *
  */
 
-//link per compressione clientside del javascript
-//http://code.google.com/p/jslzjb/
-
-//TODO i seguenti campi devono essere configurati quando 
-//si crea l'oggetto cache-results
-
-
-//TODO questi sono da cambiare, il localStorage è per site,
-//quindi non c'è problema di incasinamento di nomi di variabili
-var canUseId = 'wer324tfgerfew4sf1aas2earf';
-var localStorageId = '1aaa<azazaassq<aa2aasxwa1a<aabaa';
-var localStorageStartFunction = '2aa<aqaaasxz2s1saaza<aaawbazaa<a';
-var localStorageCancelFunction = '3aaasa2zaasaa<xas1<aaazaw<aaa';
+var localStorageId = 'query-results';
 
 $('#clearLocalStorage').click(function(){
     clientCached.initLocalStorage();
@@ -27,37 +15,6 @@ $('#clearLocalStorage').click(function(){
 var clientCached = {
     
     resultsDivId : '',
-
-    canUseCachedData : function(){
-        return !clientCached.isLocalStorageEmpty();    
-    },
-
-    //these are to be implemented from the user
-    setCancelServerCall : function(cancelServerCallFunction){
-        localStorage[localStorageCancelFunction] = cancelServerCallFunction;
-    },
-    setServerCall : function(serverCallFunction){
-        localStorage[localStorageStartFunction] = serverCallFunction;
-    },
-    
-    cancelServerCallIsSet : function(){
-        return !!(localStorage[localStorageCancelFunction]!==null &&
-                localStorage[localStorageCancelFunction].length>0);
-    },
-    
-    startServerCallIsSet : function(){
-        return !!(localStorage[localStorageCancelFunction]!==null &&
-                localStorage[localStorageCancelFunction].length>0);
-    },
-    
-    isProperlyInitiated : function() {
-        return !!(typeof clientCached.cancelServerCall === 'function' ||
-              typeof clientCached.setServerCall === 'function');
-    },
-
-    hasLocalStorage : function(){
-        return !!('localStorage' in window && window.localStorage !== null);
-    },
 
     init : function(resultsDivId){
         if (!clientCached.hasLocalStorage()) {
@@ -72,6 +29,14 @@ var clientCached = {
             localStorage[localStorageId] = JSON.stringify(compressedData);
         });
         clientCached.resultsDivId = resultsDivId;
+    },
+	
+    canUseCachedData : function(){
+        return !clientCached.isLocalStorageEmpty();    
+    },
+
+    hasLocalStorage : function(){
+        return !!('localStorage' in window && window.localStorage !== null);
     },
     
     initLocalStorage : function(){
