@@ -14,8 +14,6 @@ $('#clearLocalStorage').click(function(){
 
 var clientCached = {
     
-    resultsDivId : '',
-
     init : function(resultsDivId){
         if (!clientCached.hasLocalStorage()) {
             return;
