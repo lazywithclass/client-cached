@@ -8,7 +8,9 @@
         <div id="results"></div>
         <script type="text/javascript">
             $(document).ready(function(){
-                clientCached.init('results');
+                clientCached.init({
+					resultsDivId: 'results'
+				});
 				function ajaxCall(){
 	                $.ajax({
 	                    url:'getData.php',
@@ -38,7 +40,7 @@
                 document.write(unescape("%3Cscript src='lib/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
             }
         </script>
-        <script src="cache-results.js"></script>
+        <script src="client-cached.js"></script>
         <script src="lib/Iuppiter.js"></script>
     </body>
 </html>
