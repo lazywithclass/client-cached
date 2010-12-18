@@ -9,7 +9,9 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 clientCached.init({
-					resultsDivId: 'results'
+					resultsDivId: 'results',
+					resultsCountUrl: "countData.php",
+					delay: 300
 				});
 				function ajaxCall(){
 	                $.ajax({

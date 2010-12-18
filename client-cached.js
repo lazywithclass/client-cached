@@ -1,9 +1,8 @@
 /*
- * client-cached.js: An object to cache data on the client side.
+ * client-cached.js: An object to cache data on the client side
  *
- * (C) 2010 Alberto Zaccagni
+ * (C) 2010 Alberto Zaccagni - http://www.lazywithclass.com
  * MIT LICENSE
- *
  */
 
 var resultsLocalStorageKey = 'query-results';
@@ -14,10 +13,7 @@ $('#clearLocalStorage').click(function(){
     clientCached.initLocalStorage();
 });
 
-Function.prototype.isset = function (variable){
-	return typeof variable != 'undefined';
-};
-
+//fixme: what about avoiding to call clientCached.PROPERTY every single time? Hm?
 var clientCached = {
 	
     init : function(parameter){
@@ -33,45 +29,33 @@ var clientCached = {
             if(! localStorage[resultsLocalStorageKey]){
                 clientCached.initLocalStorage();
             }
-			
-			$.post(clientCached.resultsCountUrl, function(data){
-                localStorage[storedResultsCountLocalStorageKey] = data;
-            });
+			localStorage[resultsCountLocalStorageKey] = clientCached.getCount();
             var uncompressedData = $('#'+clientCached.resultsDivId).html();
             var compressedData = Iuppiter.compress(uncompressedData);
             localStorage[resultsLocalStorageKey] = JSON.stringify(compressedData);
         });
-		
     },
 	
     canUseCachedData : function(){
-		//if clientCached.resultsCountUrl was not set 
-		if(!isset(clientCached.resultsCountUrl)){
-		    if(!isset(clientCached.delay)){
+		if(clientCached.resultsCountUrl==undefined){
+		    if(clientCached.delay==undefined){
                 return false;
             }else{
 			    //every time the delay expires refresh the cached results
 			}	
 		}else{
-			if(isset(clientCached.delay)){
-                //every time the delay expires check the counts
-            }else{
+			if(clientCached.delay==undefined){
 				return false;
+            }else{
+	            localStorage[storedResultsCountLocalStorageKey] = clientCached.getCount();
+				if(localStorage[storedResultsCountLocalStorageKey]!=localStorage[resultsCountLocalStorageKey]){
+	                return false;
+	            }else{
+	                return true;
+	            }
 			}
 		}
 		
-		if(clientCached.isLocalStorageEmpty(resultsCountLocalStorageKey)){
-			$.post(clientCached.resultsCountUrl, function(data){
-			    clientCached.resultsCountUrl = data;
-			});
-			return false;
-		}else{
-			if(localStore[storedResultsCountLocalStorageKey]!=localStorage[resultsCountLocalStorageKey]){
-			    return false;
-			}else{
-			    return true;
-			}
-		}
         return !clientCached.isLocalStorageEmpty(resultsLocalStorageKey);    
     },
 
@@ -82,6 +66,7 @@ var clientCached = {
     initLocalStorage : function(){
         localStorage[resultsLocalStorageKey] = JSON.stringify([]);
 		localStorage[resultsCountLocalStorageKey] = JSON.stringify([]);
+		localStorage[storedResultsCountLocalStorageKey] = JSON.stringify([]);
     },
     
     isLocalStorageEmpty : function(which){
@@ -92,5 +77,19 @@ var clientCached = {
         $('#messages').html("taking data from the localStorage");
         var compressedData = JSON.parse(localStorage[resultsLocalStorageKey]);
         $('#'+clientCached.resultsDivId).html(Iuppiter.decompress(compressedData));
-    }
+    },
+	
+	getCount : function(){
+		var count = 0;
+		$.ajax({
+            url: clientCached.resultsCountUrl,
+            async: false,
+            type: 'POST',
+            dataType:'json',
+            success: function(response) {
+                 count = response.count;
+            }
+        });
+	    return count;
+	}
 };
