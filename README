@@ -51,3 +51,9 @@ if(! CLIENTCACHED.canUseCachedData()){
     console.log("taking data from the localStorage");
     CLIENTCACHED.populateResults();
 }
+
+As of now adding the following line is necessary for the library to get notified that the data is arrived:
+
+$('#results').trigger('customAction');
+
+I've read that jQuery offers a way to listen when data populates an element, so this will be in the following releseas I think.
