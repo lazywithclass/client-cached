@@ -1,2 +1,54 @@
-A very small js lib to cache search results in the localStorage.
-See included example.
+client-cached.js: An object to cache data on the client side
+
+(C) 2010 Alberto Zaccagni - http://www.lazywithclass.com
+MIT LICENSE
+
+
+See included code for a working example.
+
+
+- Setup
+jQuery is required, so add it.
+The init function has to be called before using the library.
+You can invoke it in the following ways:
+
+a) the results are checked for change every delay seconds, the count got from the
+server call is compared to the cached count.
+If the two numbers are different then a search is performed and the results in the cache are refreshed, so
+it is the cached count 
+
+clientCached.init({
+    id: 'univoco',
+    resultsDivId: 'results',
+    resultsCountUrl: 'countData.php',
+    delay: 300
+});
+
+
+b) if a search is performed after the delay has passed the results are taken from the server and those
+in the cache are refreshed
+
+clientCached.init({
+    id: 'univoco',
+    resultsDivId: 'results',
+    delay: 300
+});
+
+The id defines the place where your data will be stored, it might be a good 
+practice to set it as the POST url with all the parameters, so to have it tailored 
+to what the user searched.
+
+
+- Usage 
+
+The following is just an example to show how to use the cached results.
+
+
+if(! clientCached.canUseCachedData()){
+    console.log("taking data from the server");
+    ajaxCall();
+}else{
+    console.log("taking data from the localStorage");
+    clientCached.populateResults();
+}
+

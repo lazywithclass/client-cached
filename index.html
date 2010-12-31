@@ -8,9 +8,10 @@
         <div id="results"></div>
         <script type="text/javascript">
             $(document).ready(function(){
-                clientCached.init({
+                CLIENTCACHED.init({
+					elementId: 'univoco',
 					resultsDivId: 'results',
-					resultsCountUrl: "countData.php",
+					resultsCountUrl: 'countData.php',
 					delay: 300
 				});
 				function ajaxCall(){
@@ -31,11 +32,12 @@
 	                    }
 	                });
 				}
-				if(! clientCached.canUseCachedData()){
+				if(! CLIENTCACHED.canUseCachedData()){
 					$('#messages').html("taking data from the server");
 					ajaxCall();
 				}else{
-					clientCached.populateResults();
+					$('#messages').html("taking data from the localStorage");
+					CLIENTCACHED.populateResults();
 				}
             });
             if (typeof jQuery == 'undefined') {
