@@ -65,7 +65,12 @@ CLIENTCACHED.canUseCachedData = function(){
     }
     
     function dataChanged(){
-    	return CLIENTCACHED.getCount() != localStorage[CLIENTCACHED.storageKeys.resultsCount];
+    	var count = CLIENTCACHED.getCount();
+    	if(count!=localStorage[CLIENTCACHED.storageKeys.resultsCount]){
+    		localStorage[CLIENTCACHED.storageKeys.resultsCount] = count;
+    		return true;
+    	}
+    	return false;
     }
     
     function delayExpired(){
